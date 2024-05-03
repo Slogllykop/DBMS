@@ -1,0 +1,31 @@
+21 MongoDB MapReduce
+
+use customerDB
+
+db.createCollection("customer")
+
+db.customer.insertMany([
+{"name":"pius","email":"piyus.class@gmail.com","profession":"Business","gender":"Male","bill":10},
+{"name":"Sam","email":"coder.sam@gmail.com","profession":"Startup","gender":"Male","bill":6900},
+{"name":"Neel","email":"coder.Neel@gmail.com","profession":"Business","gender":"Male","bill":7000},
+{"name":"Moit","email":"Moit.class@gmail.com","profession":"Naukri","gender":"Male","bill":400},
+{"name":"Shreya","email":"Reya.class@gmail.com","profession":"Unemployed","gender":"Female","bill":500},
+
+])
+
+// MapReduce query for finding the count of male and female customers in the collection
+var mapFunction = function () {emit(this.gender, 1);
+var reduceFunction = function (key, values) {return Array.sum(values);
+db.customer.mapReduce(mapFunction, reduceFunction, { out: "gender_count" });
+db.gender_count.find();
+
+// MapReduce query for finding the count by profession
+var OmapFunction = function(){emit(this.profession,1);};
+var OreduceFunction = function(key,values){return Array.sum(values);};
+db.customer.mapReduce(OmapFunction,OreduceFunction,{out:"profession_count"});
+db.profession_count.find();
+
+// customers starting with B
+var Bmap = function(){emit(this._id,this.name);};
+var BReduce = function(key,values){return Array.sum(values);};
+db.customer.mapReduce(Bmap,BReduce,{query:{name:{$regex:"^B"}},out:"BName"});

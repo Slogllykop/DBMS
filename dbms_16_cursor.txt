@@ -1,0 +1,43 @@
+create table N_ROLLCALL(
+rollno integer,
+name varchar(20));
+
+CREATE table O_ROLLCALL
+( rollno integer,name varchar(20));
+
+INSERT INTO O_ROLLCALL VALUES(1,'A');
+INSERT INTO O_ROLLCALL VALUES(2,'B');
+INSERT INTO O_ROLLCALL VALUES(3,'C');
+INSERT INTO O_ROLLCALL VALUES(4,'D');
+
+SET SERVEROUTPUT ON;
+
+DECLARE
+  rno INTEGER;
+  name VARCHAR(20);
+
+  CURSOR nrc IS SELECT ROLLNO, NAME FROM O_ROLLCALL;
+
+BEGIN
+  OPEN nrc;
+
+  LOOP
+    FETCH nrc INTO rno, name;
+    EXIT WHEN nrc%NOTFOUND;
+
+    INSERT INTO N_ROLLCALL (ROLLNO, NAME)
+    SELECT rno, name
+    FROM DUAL
+    WHERE NOT EXISTS (
+      SELECT 1
+      FROM N_ROLLCALL
+      WHERE ROLLNO = rno
+    );
+
+    COMMIT;
+  END LOOP;
+
+  DBMS_OUTPUT.PUT_LINE(chr(13)||chr(10)||'Data copied');
+  CLOSE nrc;
+END;
+/
