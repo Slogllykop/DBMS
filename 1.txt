@@ -1,0 +1,80 @@
+ create table stud(
+ roll int,
+ name varchar2(30),
+att int,
+status varchar2(30) null);
+
+
+SQL> insert into stud values(1,'a',78,null);
+
+1 row created.
+
+SQL> insert into stud values(2,'b',50,null);
+
+1 row created.
+
+SQL>  insert into stud values(3,'c',12,null);
+
+1 row created.
+
+SQL>  insert into stud values(4,'d',98,null);
+
+1 row created.
+
+SQL> select * from stud;
+
+ ROLL		 NAME                                  ATT STATUS
+---------- ------------------------------  ------------------------------
+         1 a                                      78
+         2 b                                      50
+         3 c                                      12
+         4 d                                      98
+
+
+SQL> set serveroutput on;
+SQL> create procedure ee(rollin integer) as
+  2  roll integer :=rollin;
+  3  att integer;
+  4  begin
+  5  select att into att from stud where rollin=roll;
+  6   if (att<75) then
+  7  dbms_output.put_line('Term not granted');
+  8     update stud set status='Detained' where rollin=roll;
+  9   else
+ 10  dbms_output.put_line('Term  granted');
+ 11   update stud set status='Not Detained' where rollin=roll;
+ 12  end if;
+ 13  end;
+ 14  /
+
+Procedure created.
+
+SQL> call ee(1);
+Term  granted
+
+Call completed.
+
+SQL> select * from stud;
+
+      ROLL NAME                                  ATT STATUS
+---------- ------------------------------ ---------- ------------------------------
+         1 a                                      78 Not Detained
+         2 b                                      50
+         3 c                                      12
+         4 d                                      98
+
+SQL> call ee(2);
+Term not granted
+
+Call completed.
+
+SQL> select * from stud;
+
+      ROLL NAME                                  ATT STATUS
+---------- ------------------------------ ---------- ------------------------------
+         1 a                                      78 Not Detained
+         2 b                                      50 Detained
+         3 c                                      12
+         4 d                                      98
+
+
