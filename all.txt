@@ -1,0 +1,1475 @@
+LA-1 :
+size=10
+hashtable=[]
+hashtable1=[]
+
+for i in range(size):
+	hashtable.append(0)
+	hashtable1.append(0)
+
+def hash_v(num):
+	index=num%size
+	while(hashtable[index]!=0):
+		index+=1
+	hashtable[index]=num
+
+def quadratic_v(num):
+	index1=num%size
+	if(hashtable1[index1]==0):
+		hashtable1[index1]=num
+	else:
+		for k in range(size):
+			t=(index1+k*k)%size
+			if(hashtable1[t]==0):
+				hashtable1[t]=num
+				break
+				
+def find1(num,hash_table):
+    flag=0
+    for i in hash_table:
+        if(num==i):
+            flag=1 
+            break
+        else:
+            flag=0
+    if(flag==1):
+        print("Found")
+    else:
+        print("Not Found")
+        
+def main():
+	while True:
+		print("1.Linear Probing")
+		print("2.Quadratic probing")
+		print("3.Find element")
+		print("4.Exit")
+		cd=int(input("Enter choice:"))
+		if cd==1:
+			n=int(input("Enter total elements:"))
+			for j in range(n):
+				h=int(input("Enter phone numbers:"))
+				hash_v(h)
+			print("Hashtable using linear probing is:",hashtable)
+			
+		elif cd==2:
+			m=int(input("Enter total elements:"))
+			for j in range(m):
+				q=int(input("Enter phone numbers:"))
+				quadratic_v(q)
+			print("Hashtable using quadratic probing is:",hashtable1)
+			
+		elif cd==3:
+			n=int(input("Enter the number to be found"))
+			ans=int(input("find using linear probing or quadratic probing [linear=1,quadratic=2] : "))
+			if (ans==1):
+			    find1(n,hashtable)
+			else:
+			    find1(n,hashtable1)
+			
+		
+		elif cd==4:
+			print("End of program")
+			break
+		else:
+			print("Enetr a valid choice")
+			
+main()
+
+
+
+---------------------------------------------------------------------------------------------
+
+
+
+
+LA2:
+#Hashing using Dictionary
+size = 10
+hash_table = {}
+
+def addList(dict, size):
+    for i in range(size):
+        dict[i] = []
+    return dict
+
+def insert_lst(n, key, val, dict):
+    lst = []
+    idx = val % n
+    lst += [key, val]
+    dict[idx].append(lst)
+    return dict
+
+def delete_key(key, dict):
+    for i in dict:
+        for j in dict[i]:
+            if key == j[0]:
+                dict[i].remove(j)
+    return dict
+
+def find_key(key, dict):
+    for i in dict:
+        for j in dict[i]:
+            if j[0] == key:
+                return j
+
+dict = addList(hash_table, size)
+
+def main():
+  while True :
+    print("Dictionary Implementation ")
+    print("1. Insert an element ")
+    print("2. Delete an element ")
+    print("3. Finding a key ")
+    print("4. Exit")
+    choice = int(input("Enter the choice : "))
+
+    if choice == 1:
+        key = input("Enter the key : ")
+        val = int(input("Enter the data in array : "))
+        arr = insert_lst(size, key, val, dict)
+        print(arr)
+
+    elif choice == 2:
+        key = input("Enter the key to delete : ")
+        print(delete_key(key, dict))
+
+    elif choice == 3:
+        key = input("Enter the key to Find : ")
+        print(find_key(key, dict))
+
+    elif choice > 4:
+        print("Invalid input !!!")
+
+    else:
+        break
+
+main()
+
+
+------------------------------------------------------------------------------------
+
+LA3:
+#include <iostream>
+#include <climits>
+using namespace std;
+
+struct Node {
+    int data;
+    Node* left;
+    Node* right;
+};
+
+// Function to create a new node
+Node* createNode(int value) {
+    Node* newNode = new Node();
+    if (!newNode) {
+        cout << "Memory error\n";
+        return NULL;
+    }
+    newNode->data = value;
+    newNode->left = newNode->right = NULL;
+    return newNode;
+}
+
+// Function to insert a node in the binary search tree
+Node* insertNode(Node* root, int value) {
+    if (root == NULL) {
+        return createNode(value);
+    }
+    if (value < root->data) {
+        root->left = insertNode(root->left, value);
+    } else if (value > root->data) {
+        root->right = insertNode(root->right, value);
+    }
+    return root;
+}
+
+// Function to find the number of nodes in the longest path from the root
+int findLongestPath(Node* root) {
+    if (root == NULL) {
+        return 0;
+    }
+    int leftPath = findLongestPath(root->left);
+    int rightPath = findLongestPath(root->right);
+    return max(leftPath, rightPath) + 1;
+}
+
+// Function to find the minimum data value in the tree
+int findMinimumValue(Node* root) {
+    if (root == NULL) {
+        cout << "Error: Tree is empty\n";
+        return INT_MAX;
+    }
+    if (root->left == NULL) {
+        return root->data;
+    }
+    return findMinimumValue(root->left);
+}
+
+// Function to swap the left and right pointers of each node in the tree
+Node* swapPointers(Node* root) {
+    if (root == NULL) {
+        return NULL;
+    }
+    Node* temp = root->left;
+    root->left = root->right;
+    root->right = temp;
+    root->left = swapPointers(root->left);
+    root->right = swapPointers(root->right);
+    return root;
+}
+
+// Function to search for a value in the tree
+bool searchValue(Node* root, int value) {
+    if (root == NULL) {
+        return false;
+    }
+    if (root->data == value) {
+        return true;
+    }
+    if (value < root->data) {
+        return searchValue(root->left, value);
+    } else {
+        return searchValue(root->right, value);
+    }
+}
+
+// Function to display the tree using inorder traversal
+void inorderTraversal(Node* root) {
+    if (root == NULL) {
+        return;
+    }
+    inorderTraversal(root->left);
+    cout << root->data << " ";
+    inorderTraversal(root->right);
+}
+
+// Function to take input from the user
+void takeInput(Node*& root) {
+    int value;
+    char choice;
+
+    do {
+        cout << "Enter a value to insert: ";
+        cin >> value;
+        root = insertNode(root, value);
+
+        cout << "Do you want to insert another value? (y/n): ";
+        cin >> choice;
+    } while (choice == 'y' || choice == 'Y');
+}
+
+int main() {
+    Node* root = NULL;
+
+    int option;
+    int newValue;
+    int longestPath;
+    int minimumValue;
+    int valueToSearch;
+
+    do {
+        cout << "\nBinary Search Tree Operations\n";
+        cout << "1. Insert a node\n";
+        cout << "2. Find the number of nodes in the longest path from root\n";
+        cout << "3. Find the minimum data value in the tree\n";
+        cout << "4. Swap the left and right pointers of each node in the tree\n";
+        cout << "5. Search for a value\n";
+        cout << "6. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> option;
+
+        switch (option) {
+            case 1:
+                cout << "Enter a value to insert: ";
+                cin >> newValue;
+                root = insertNode(root, newValue);
+                cout << "Node inserted successfully\n";
+                break;
+            case 2:
+                longestPath = findLongestPath(root);
+                cout << "Number of nodes in the longest path from root: " << longestPath << endl;
+                break;
+            case 3:
+                minimumValue = findMinimumValue(root);
+                cout << "Minimum value in the tree: " << minimumValue << endl;
+                break;
+            case 4:
+                root = swapPointers(root);
+                cout << "Pointers swapped successfully\n";
+                break;
+            case 5:
+                cout << "Enter a value to search: ";
+                cin >> valueToSearch;
+                if (searchValue(root, valueToSearch)) {
+                    cout << valueToSearch << " found in the tree\n";
+                } else {
+                    cout << valueToSearch << " not found in the tree\n";
+                }
+                break;
+            case 6:
+                cout << "Exiting the program\n";
+                break;
+            default:
+                cout << "Invalid option. Please try again\n";
+        }
+
+    } while (option != 6);
+
+    return 0;
+}
+
+-------------------------------------------------------------------------------------
+
+LA-4:
+#include <iostream>
+#include <string>
+using namespace std;
+
+struct Node {
+    string keyword;
+    string meaning;
+    Node* left;
+    Node* right;
+};
+
+Node* createNode(const string& keyword, const string& meaning) {
+    Node* newNode = new Node();
+    newNode->keyword = keyword;
+    newNode->meaning = meaning;
+    newNode->left = newNode->right = nullptr;
+    return newNode;
+}
+
+Node* insertKeyword(Node* root, const string& keyword, const string& meaning) {
+    if (root == nullptr) {
+        return createNode(keyword, meaning);
+    }
+
+    if (keyword < root->keyword) {
+        root->left = insertKeyword(root->left, keyword, meaning);
+    } else if (keyword > root->keyword) {
+        root->right = insertKeyword(root->right, keyword, meaning);
+    } else {
+        cout << "Keyword already exists!" << endl;
+    }
+
+    return root;
+}
+
+Node* deleteKeyword(Node* root, const string& keyword) {
+    if (root == nullptr) {
+        return nullptr;
+    }
+
+    if (keyword < root->keyword) {
+        root->left = deleteKeyword(root->left, keyword);
+    } else if (keyword > root->keyword) {
+        root->right = deleteKeyword(root->right, keyword);
+    } else {
+        if (root->left == nullptr) {
+            Node* temp = root->right;
+            delete root;
+            return temp;
+        } else if (root->right == nullptr) {
+            Node* temp = root->left;
+            delete root;
+            return temp;
+        }
+
+        Node* minValueNode = root->right;
+        while (minValueNode->left != nullptr) {
+            minValueNode = minValueNode->left;
+        }
+
+        root->keyword = minValueNode->keyword;
+        root->meaning = minValueNode->meaning;
+
+        root->right = deleteKeyword(root->right, minValueNode->keyword);
+    }
+
+    return root;
+}
+
+Node* searchKeyword(Node* root, const string& keyword) {
+    if (root == nullptr || root->keyword == keyword) {
+        return root;
+    }
+
+    if (keyword < root->keyword) {
+        return searchKeyword(root->left, keyword);
+    } else {
+        return searchKeyword(root->right, keyword);
+    }
+}
+
+void displayAscending(Node* root) {
+    if (root == nullptr) {
+        return;
+    }
+
+    displayAscending(root->left);
+    cout << root->keyword << ": " << root->meaning << endl;
+    displayAscending(root->right);
+}
+
+void displayDescending(Node* root) {
+    if (root == nullptr) {
+        return;
+    }
+
+    displayDescending(root->right);
+    cout << root->keyword << ": " << root->meaning << endl;
+    displayDescending(root->left);
+}
+
+int main() {
+    Node* root = nullptr;
+
+    int choice;
+    string keyword, meaning;
+    Node* foundNode = nullptr;  // Declare the variable outside the switch statement
+
+    while (true) {
+        cout << "\nDictionary Operations\n";
+        cout << "1. Add a new keyword\n";
+        cout << "2. Delete a keyword\n";
+        cout << "3. Update the meaning of a keyword\n";
+        cout << "4. Display keywords in ascending order\n";
+        cout << "5. Display keywords in descending order\n";
+        cout << "6. Find the maximum number of comparisons for a keyword\n";
+        cout << "7. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                cout << "Enter the keyword: ";
+                cin >> keyword;
+                cout << "Enter the meaning: ";
+                cin.ignore();
+                getline(cin, meaning);
+                root = insertKeyword(root, keyword, meaning);
+                cout << "Keyword added successfully!" << endl;
+                break;
+            case 2:
+                cout << "Enter the keyword to delete: ";
+                cin >> keyword;
+                root = deleteKeyword(root, keyword);
+                cout << "Keyword deleted successfully!" << endl;
+                break;
+            case 3:
+                cout << "Enter the keyword to update: ";
+                cin >> keyword;
+                cout << "Enter the new meaning: ";
+                cin.ignore();
+                getline(cin, meaning);
+                foundNode = searchKeyword(root, keyword);
+                if (foundNode != nullptr) {
+                    foundNode->meaning = meaning;
+                    cout << "Keyword updated successfully!" << endl;
+                } else {
+                    cout << "Keyword not found!" << endl;
+                }
+                break;
+            case 4:
+                cout << "Keywords in ascending order:" << endl;
+                displayAscending(root);
+                break;
+            case 5:
+                cout << "Keywords in descending order:" << endl;
+                displayDescending(root);
+                break;
+            case 6:
+                cout << "Enter the keyword to search: ";
+                cin >> keyword;
+                foundNode = searchKeyword(root, keyword);
+                if (foundNode != nullptr) {
+                    cout << "Keyword found!" << endl;
+                } else {
+                    cout << "Keyword not found!" << endl;
+                }
+                break;
+            case 7:
+                cout << "Exiting the program." << endl;
+                return 0;
+            default:
+                cout << "Invalid option. Please try again." << endl;
+        }
+    }
+}
+
+--------------------------------------------------------------------------------
+//LA-5 BT-TBT
+
+#include<iostream>
+using namespace std;
+
+class node {
+	public :
+		int data;
+		int lth,rth;
+		node *right,*left;
+};
+
+class TBT {
+	
+		
+	public :node * root,* head;
+		TBT() {
+		head = new node;
+		head->right = head;
+		head->left = head;
+		head->lth = 1;
+		head->rth = 0;
+		root = NULL;
+		}
+		void create();
+		void preorder();
+		void inorder();
+		node * inorderSucc(node *);
+};
+
+
+void TBT :: create() {
+	node *temp,*curr;
+	char ch;
+	do {
+		curr = new node;
+		cout<<"\n Enter the data : ";
+		cin>>curr->data;
+		curr->right = NULL;
+		curr->left = NULL;
+		curr->lth = 1;
+		curr->rth = 1;
+
+		if(root == NULL) 
+		{
+			root = curr;
+			root->right = head;
+			root->left = head;
+			head->left = root;
+			head->lth = 0;			
+		} else 
+		{
+			temp = root;
+			while(1) 
+			{
+				if(curr->data < temp->data) 
+				{
+					if(temp->lth == 1) 
+					{
+					curr->left = temp->left;
+					curr->right = temp;
+					temp->lth = 0;
+					temp->left = curr;	
+					break;	
+					} 
+					else 
+					{
+						temp = temp->left;
+					}	
+				} 
+					else 
+					{
+					if(temp->rth == 1) 
+					{
+					curr->right = temp->right;
+					curr->left = temp;
+					temp->rth = 0;
+					temp->right = curr;
+					break;
+					} 
+					else 
+					{
+						temp = temp->right;		
+					}
+				}
+			}				
+		}
+		cout<<"\n Do you want to continue (Y/N) :  ";
+		cin>>ch;
+	}while(ch == 'y' || ch == 'Y');	
+}
+
+void TBT :: preorder() {
+node * temp;
+int flag = 0;
+temp = root;
+	while(temp != head) 
+	{
+		if(flag == 0)
+			cout<<temp->data<< "  ";
+		if(temp->lth == 0 && flag == 0) {
+			temp = temp->left;
+		} 
+		else if( temp->rth == 0){
+			temp = temp->right;
+			flag = 0;
+		} else {
+			temp = temp->right;
+			flag = 1;
+		}
+	}
+} 
+
+
+void TBT :: inorder() {
+	node* temp;
+	temp = head;
+	do{
+		temp = inorderSucc(temp);
+		if(temp!= head)
+			cout<<temp->data<<" ";
+	}while(temp != head);
+}
+
+node * TBT :: inorderSucc(node * temp) {
+	node * p;
+	p = temp->right;
+	if(temp->rth == 0)
+	{
+		while(p->lth == 0)
+		{
+			p = p->left;
+		}
+	}
+	return p;
+}
+
+
+int main() 
+{
+	TBT t;
+	cout<<"\n Create a binary tree : ";
+	t.create();
+	cout<<"\n Preorder traversal is : ";
+	t.preorder();
+	cout<<"\n Inorder traversal is : ";
+	t.inorder();
+return 0;
+}
+
+/*-------------------------------------------------------------------------------------*/
+
+LA6 : BFD DFS
+#include <bits/stdc++.h>
+using std::cout;
+using std::cin;
+using std::endl;
+int cost[10][10], i, j, k, n, qu[10], front, rear, v, visit[10], visited[10];
+int stk[10], top, visit1[10], visited1[10];
+
+int main()
+{
+    int m;
+    cout << "Enter number of vertices : ";
+    cin >> n;
+    cout << "Enter number of edges : ";
+    cin >> m;
+    
+    cout << "\nEDGES :\n";
+    for (k = 1; k <= m; k++)
+    {
+        cin >> i >> j;
+        cost[i][j] = 1;
+        cost[j][i] = 1;
+    }
+
+    cout << "The adjacency matrix of the graph is : " << endl;
+    for (i = 0; i < n; i++)
+    {
+        for (j = 0; j < n; j++)
+        {
+            cout << " " << cost[i][j];
+        }
+        cout << endl;
+    }
+    
+    cout << "Enter initial vertex for BFS: ";
+    cin >> v;
+    cout << "The BFS of the Graph is\n";
+    cout << v<<endl;
+    visited[v] = 1;
+    k = 1;
+    while (k < n)
+    {
+        for (j = 1; j <= n; j++)
+            if (cost[v][j] != 0 && visited[j] != 1 && visit[j] != 1)
+            {
+                visit[j] = 1;
+                qu[rear++] = j;
+            }
+        v = qu[front++];
+        cout << v << " ";
+        k++;
+        visit[v] = 0;
+        visited[v] = 1;
+    }
+    
+    cout <<endl<<"Enter initial vertex for DFS: ";
+    cin >> v;
+    cout << "The DFS of the Graph is\n";
+    cout << v<<endl;
+    visited[v] = 1;
+    k = 1;
+    while (k < n)
+    {
+        for (j = n; j >= 1; j--)
+            if (cost[v][j] != 0 && visited1[j] != 1 && visit1[j] != 1)
+            {
+                visit1[j] = 1;
+                stk[top] = j;
+                top++;
+            }
+        v = stk[--top];
+        cout << v << " ";
+        k++;
+        visit1[v] = 0;
+        visited1[v] = 1;
+    }
+
+    return 0;
+}
+
+
+/*-------------------------------------------------------------*/
+
+LA7:
+#include <bits/stdc++.h>
+#include<ctime>
+using namespace std;
+int adj_mat[50][50] = {0, 0};
+int main()
+{
+    cout <<"\nEnter no. of cities: ";
+    int n;
+    cin >> n;
+    string cities[n];
+    for (int i=0; i<n; i++)
+    {
+        cout <<"Enter city "<<i+1<<" (Airport Code): ";
+        cin >> cities[i];
+    }
+    cout << "\nYour cities are: ";
+    for (int i=0; i<n; i++)
+        cout <<"\ncity "<<i+1<<": "<<cities[i];
+    for (int i=0; i<n; i++)
+    {
+        for (int j=i+1; j<n; j++)
+        {
+            cout <<"\nEnter distance between "<< cities[i]<<"and "<<cities[j]<<" : ";
+            cin >> adj_mat[i][j];
+            adj_mat[j][i] = adj_mat[i][j];
+        }
+    }
+    for (int i = 0; i < n; i++)
+        cout<<"\t"<<cities[i]<<"\t";
+    for (int i=0; i<n; i++)
+    {
+        cout<<"\n"<< cities[i];
+        for (int j=0; j<n; j++)
+            cout<<"\t" << adj_mat[i][j] << "\t";
+    }
+    time_t begin,end;
+    double time_req;
+    time (& begin);
+    time(& end);
+    time_req=difftime(end,begin);
+    cout<<"\nTIME REQ. IS:"<<time_req;
+    return 0;
+}
+/*-----------------------------------------------------------------------------*/
+
+//LA8 OBST
+
+#include<iostream>
+using namespace std;
+void con_obst(void);
+void print(int,int);
+float a[20],b[20],wt[20][20],c[20][20];
+int r[20][20],n;
+int main()
+  {
+	int i;
+	cout<<"\n****** PROGRAM FOR OBST ******\n";
+	cout<<"\nEnter the no. of nodes : ";
+	cin>>n;cout<<"\nEnter the probability for successful search :: ";
+	cout<<"\n————————————————\n";
+	for(i=1;i<=n;i++)
+	  {
+		cout<<"p["<<i<<"]";
+		cin>>a[i];
+	  }
+	cout<<"\nEnter the probability for unsuccessful search :: ";
+	cout<<"\n————————————————–\n";
+	for(i=0;i<=n;i++)
+	  {
+		cout<<"q["<<i<<"]";
+		cin>>b[i];
+	  }
+	con_obst();
+	print(0,n);
+	cout<<endl;
+}
+void con_obst(void)
+{
+	int i,j,k,l,min;
+	for(i=0;i<n;i++)
+	  { //Initialisation
+		c[i][i]=0.0;
+		r[i][i]=0;
+		wt[i][i]=b[i];
+		// for j-i=1 can be j=i+1
+		wt[i][i+1]=b[i]+b[i+1]+a[i+1];
+		c[i][i+1]=b[i]+b[i+1]+a[i+1];
+		r[i][i+1]=i+1;
+	  }
+	c[n][n]=0.0;
+	r[n][n]=0;
+	wt[n][n]=b[n];
+	//for j-i=2,3,4....,n
+	for(i=2;i<=n;i++)
+	  {
+		for(j=0;j<=n-i;j++)
+		  {
+			wt[j][j+i]=b[j+i]+a[j+i]+wt[j][j+i-1];
+			c[j][j+i]=9999;
+			for(l=j+1;l<=j+i;l++)
+			  {
+				if(c[j][j+i]>(c[j][l-1]+c[l][j+i]))
+				  {
+					c[j][j+i]=c[j][l-1]+c[l][j+i];
+					r[j][j+i]=l;
+				  }
+			  }
+			c[j][j+i]+=wt[j][j+i];
+		  }
+		cout<<endl;
+	  }
+	cout<<"\n\nOptimal BST is :: ";
+	cout<<"\nw[0]["<<n<<"] :: "<<wt[0][n];
+	cout<<"\nc[0]["<<n<<"] :: "<<c[0][n];
+	cout<<"\nr[0]["<<n<<"] :: "<<r[0][n];
+  }
+void print(int l1, int r1)
+  {
+	if(l1>=r1)
+		return;
+	if(r[l1][r[l1][r1]-1]!=0)
+		cout<<"\n Left child of "<<r[l1][r1]<<" :: "<<r[l1][r[l1][r1]-1];
+	if(r[r[l1][r1]][r1]!=0)
+		cout<<"\n Right child of "<<r[l1][r1]<<" :: "<<r[r[l1][r1]][r1];
+	print(l1,r[l1][r1]-1);
+	print(r[l1][r1],r1);
+	return;
+}
+
+
+
+/*----------------------------------------------------------------------------------*/
+
+//LA9-AVL
+#include<iostream>
+using namespace std;
+class node
+{
+public:
+    string key;
+    string meaning;
+    node *left;
+    node *right;
+};
+class AVL
+{
+    node *root;
+public:
+    AVL()
+    {
+        root=NULL;
+    }
+    void create();
+    node* insert(node *cur,node *temp);
+    node* balance(node *temp);
+    int diff(node *temp);
+    int height(node *temp);
+    int maximum(int a,int b);
+    
+    node* LL(node *par);
+    node* RR(node *par);
+    node* LR(node *par);
+    node* RL(node *par);
+    
+    void ascending(node *temp);
+    node* delete_n(node *cur,string key1);
+    void deleten();
+    
+    node* extractmin(node *t);
+    void descending(node *temp);
+    void display();
+    bool search(node *cur,string key1);
+    void search_value();
+    
+};
+void AVL::create()
+{
+    int ans;
+    node *temp;
+    do {
+        temp = new node();
+
+        cout<<"\nEnter the keyword:";
+        cin>>temp->key;
+        cout<<"\nEnter the Meaning:";
+        cin.ignore();
+        getline(cin, temp->meaning);
+
+        temp->left = temp->right = NULL;
+
+        root = insert(root, temp);
+        cout<<"\nDo you want to add another word? (1/0): ";
+        cin>>ans;
+    } while(ans == 1);
+}
+
+node* AVL::insert(node *cur,node* temp)
+{
+    if(cur == NULL)
+    {
+        return temp;
+    }
+    if(temp->key < cur->key)
+    {
+        cur->left = insert(cur->left, temp);
+        cur = balance(cur);
+    }
+    else if(temp->key > cur->key)
+    {
+        cur->right = insert(cur->right, temp);
+        cur = balance(cur);
+    }
+    return cur;
+}
+
+node* AVL::balance(node *temp)
+{
+    int bal;
+    bal = diff(temp);
+
+    if(bal >= 2)
+    {
+        if(diff(temp->left) < 0)
+            temp = LR(temp);
+        else
+            temp = LL(temp);
+    }
+    else if(bal <= -2)
+    {
+        if(diff(temp->right) < 0)
+            temp = RR(temp);
+        else
+            temp = RL(temp);
+    }
+    return temp;
+}
+
+int AVL::diff(node *temp)
+{
+    int l,r;
+    l = height(temp->left);
+    r = height(temp->right);
+    return (l - r);
+}
+
+int AVL::height(node *temp)
+{
+    if(temp == NULL)
+        return (-1);
+    else
+        return (maximum(height(temp->left), height(temp->right)) + 1);
+}
+
+int AVL::maximum(int a, int b)
+{
+    if(a > b)
+        return a;
+    else
+        return b;
+}
+
+node* AVL::LL(node *par)
+{
+    node *temp, *temp1;
+    temp = par->left;
+    temp1 = temp->right;
+    temp->right = par;
+    par->left = temp1;
+    return temp;
+}
+
+node* AVL::RR(node *par)
+{
+    node *temp, *temp1;
+    temp = par->right;
+    temp1 = temp->left;
+    temp->left = par;
+    par->right = temp1;
+    return temp;
+}
+
+node* AVL::LR(node *par)
+{
+    par->left = RR(par->left);
+    return LL(par);
+}
+
+node* AVL::RL(node *par)
+{
+    par->right = LL(par->right);
+    return RR(par);
+}
+
+void AVL::ascending(node *temp)
+{
+    if(temp != NULL)
+    {
+        ascending(temp->left);
+        cout<<"\n\t"<<temp->key<<":"<<temp->meaning;
+        ascending(temp->right);
+    }
+}
+
+void AVL::descending(node *temp)
+{
+    if(temp != NULL)
+    {
+        descending(temp->right);
+        cout<<"\n\t"<<temp->key<<":"<<temp->meaning;
+        descending(temp->left);
+    }
+}
+
+void AVL::display()
+{
+    cout<<"\nThe keywords in ascending order are:\n";
+    ascending(root);
+    cout<<"\nThe keywords in descending order are:\n";
+    descending(root);
+}
+
+bool AVL::search(node *cur, string key1)
+{
+    if(cur)
+    {
+        if(cur->key == key1)
+            return true;
+        if(cur->key > key1)
+            return search(cur->left, key1);
+        else
+            return search(cur->right, key1);
+    }
+    return false;
+}
+
+void AVL::search_value()
+{
+    string key2;
+    cout<<"\nEnter the keyword you wish to search: ";
+    cin>>key2;
+    if(search(root, key2))
+        cout<<"\nThe entered keyword is present in the AVL Tree.";
+    else
+        cout<<"\nThe entered keyword is not present in the AVL Tree.";
+}
+
+node* AVL::delete_n(node *cur, string key1)
+{
+    if(!cur)
+        return cur;
+    if(key1 < cur->key)
+        cur->left = delete_n(cur->left, key1);
+    else if(key1 > cur->key)
+        cur->right = delete_n(cur->right, key1);
+    else
+    {
+        node *l = cur->left;
+        node *r = cur->right;
+        delete cur;
+        if(!r)
+            return l;
+        node *m = r;
+        while(m->left)
+            m = m->left;
+        m->right = extractmin(r);
+        m->left = l;
+        return balance(m);
+    }
+    return balance(cur);
+}
+
+node* AVL::extractmin(node *t)
+{
+    if(!t->left)
+        return t->right;
+    t->left = extractmin(t->left);
+    return balance(t);
+}
+
+void AVL::deleten()
+{
+    string key;
+    cout<<"\nEnter the keyword to be deleted: ";
+    cin>>key;
+    root = delete_n(root, key);
+}
+
+int main()
+{
+    int c;
+    int ch;
+    AVL a;
+    do
+    {
+        cout<<"***********************************************";
+        cout<<"\n1. Insert a keyword in AVL tree";
+        cout<<"\n2. Display the AVL tree";
+        cout<<"\n3. Search a keyword";
+        cout<<"\n4. Delete a keyword";
+        cout<<"\n----> Enter Your Choice <----: ";
+        cin>>ch;
+        switch(ch)
+        {
+            case 1:
+                a.create();
+                break;
+            case 2:
+                a.display();
+                break;
+            case 3:
+                a.search_value();
+                break;
+            case 4:
+                a.deleten();
+                break;
+            default:
+                cout<<"\nWrong Choice!";
+        }
+        cout<<"\nDo You Want to Continue? (1/0): ";
+        cin>>c;
+    } while(c == 1);
+    return 0;
+}
+
+/*-------------------------------------------------------------------*/
+
+//LA-10 HEAP
+#include<bits/stdc++.h>
+using namespace std;
+
+class heap
+{
+    int heap1[20],heap2[20],x,n1,i;
+    public:
+    heap()
+    {
+        heap1[0]=0;
+        heap2[0]=0;
+    }
+    void datain();
+    void insert1(int heap1[],int);
+    void upadj1(int heap1[],int);
+    void insert2(int heap2[],int);
+    void upadj2(int heap2[],int);
+    void minmax();
+};
+
+void heap::datain()
+{
+    cout<<"Enter the number of students: ";
+    cin>>n1;
+    cout<<"Enter the marks:"<<endl;
+    for (i=1;i<=n1;i++)
+    {
+        cout<<"Enter the marks of student "<<i<<" :";
+        cin>>x;
+        insert1(heap1,x);
+        insert2(heap2,x);
+    }
+}
+
+void heap::insert1(int heap1[20],int x)
+{
+    int n;
+    n=heap1[0];
+    heap1[n+1]=x;
+    heap1[0]=n+1;
+    upadj1(heap1,n+1);
+}
+
+void heap:: upadj1(int heap1[20],int i)
+{
+    int temp;
+    while(i>1&&heap1[i]>heap1[i/2])
+    {
+        temp=heap1[i];
+        heap1[i]=heap1[i/2];
+        heap1[i/2]=temp;
+        i=i/2;
+    }
+}
+
+void heap:: insert2(int heap2[20],int x)
+{
+    int n;
+    n=heap2[0];
+    heap2[n+1]=x;
+    heap2[0]=n+1;
+    upadj2(heap2,n+1);
+}
+
+void heap:: upadj2(int heap2[20],int i)
+{
+    int temp1;
+
+    while (i>1&&heap2[i]<heap2[i/2])
+    {
+        temp1=heap2[i];
+        heap2[i]=heap2[i/2];
+        heap2[i/2]=temp1;
+        i=i/2;
+    }
+}
+
+void heap::minmax()
+{
+    cout<<"max marks:"<<heap1[1]<<endl;
+    cout<<"min marks:"<<heap2[1]<<endl;
+}
+
+int main()
+{
+    heap h;
+    h.datain();
+    h.minmax();
+    return 0;
+}
+/*--------------------------------------------------------------*/
+
+//LA-11 FILE
+#include<iostream>
+#include<stdio.h>
+#include<fstream>
+using namespace std;
+struct student
+{
+int roll;
+char name[20];
+};
+class database
+{
+struct student st;
+public:
+void insert_data();
+void read_data();
+void search_data();
+void update_data();
+void delete_data();
+void sort_data();
+};
+void database::sort_data()
+{
+ifstream file;
+ofstream out;
+struct student st[50],temp;
+int i=0,n,j;
+file.open("database.txt",ios::binary|ios::in);
+file.read((char*)&st[i],sizeof(st[i])); //Important
+while(!file.eof())
+{
+i++;
+file.read((char*)&st[i],sizeof(st[i]));
+}
+file.close();
+n=i;
+for(i=0;i<=n;i++)
+{
+for(j=i+1;j<=n;j++)
+{
+if(st[i].roll>st[j].roll)
+{
+temp=st[i];
+st[i]=st[j];
+st[j]=temp;
+}
+}
+}
+out.open("database.txt",ios::binary|ios::trunc|ios::out);
+for(i=0;i<n;i++)
+{
+out.write((char*)&st[i],sizeof(struct student));
+}
+out.close();
+}
+void database::read_data()
+{
+struct student st;
+ifstream file;
+file.open("database.txt",ios::binary|ios::in);
+file.read((char*)&st,sizeof(st)); //Important
+while(!file.eof())
+{
+cout<<"\n"<<st.roll<<"\t"<<st.name;
+file.read((char*)&st,sizeof(st));
+}
+cout<<"\n";
+file.close();
+}
+void database::update_data()
+{
+struct student st;
+int roll_number,flag=0,flag1=0;
+ifstream file;
+ofstream ofile;
+cout<<"\nEnter the roll no. of the record that you want to search :";
+cin>>roll_number;
+file.open("database.txt",ios::binary|ios::in);
+ofile.open("db1.txt",ios::binary|ios::out|ios::trunc);
+file.read((char*)&st,sizeof(st)); //Important
+while(!file.eof())
+{
+if(roll_number==st.roll)
+{
+cout<<"\nRECORD FOUND!!!";
+cout<<"\nEnter new name of the student";
+cin>>st.name;
+ofile.write((char*)&st,sizeof(st));
+flag=1;flag1=1;
+}
+if(flag==0)
+{
+ofile.write((char*)&st,sizeof(st));
+}
+flag=0;
+file.read((char*)&st,sizeof(st));
+}
+if(flag1==0)
+{
+cout<<"\nRECORD NOT FOUND!!!\n";
+}
+cout<<"\n";
+remove("database.txt");
+rename("db1.txt","database.txt");
+file.close();
+}
+void database::delete_data()
+{
+struct student st;
+int roll_number,flag=0,flag1=0;
+ifstream file;
+ofstream ofile;
+cout<<"\nEnter the roll no. of the record that you want to search :";
+cin>>roll_number;
+file.open("database.txt",ios::binary|ios::in);
+ofile.open("db1.txt",ios::binary|ios::out|ios::trunc);
+file.read((char*)&st,sizeof(st)); //Important
+while(!file.eof())
+{
+if(roll_number==st.roll)
+{
+cout<<"\nRECORD FOUND!!!";
+flag=1;flag1=1;
+}
+if(flag==0)
+{
+ofile.write((char*)&st,sizeof(st));
+}
+flag=0;
+file.read((char*)&st,sizeof(st));
+}
+if(flag1==0)
+{
+cout<<"\nRECORD NOT FOUND!!!\n";
+}
+cout<<"\n";
+remove("database.txt");
+rename("db1.txt","database.txt");
+file.close();
+}
+void database::search_data()
+{
+struct student st;
+int roll_number,flag=0;
+ifstream file;
+cout<<"\nEnter the roll no. of the record that you want to search :";
+cin>>roll_number;
+file.open("database.txt",ios::binary|ios::in);
+file.read((char*)&st,sizeof(st)); //Important
+while(!file.eof())
+{
+if(roll_number==st.roll)
+{
+cout<<"\nRECORD FOUND!!!";
+cout<<"\n"<<st.roll<<"\t"<<st.name;
+flag=1;
+break;
+}
+file.read((char*)&st,sizeof(st));
+}
+if(flag==0)
+{
+cout<<"\nRECORD NOT FOUND!!!\n";
+}
+cout<<"\n";
+file.close();
+}
+void database::insert_data()
+{
+ofstream file;
+file.open("database.txt",ios::binary|ios::out|ios::app);
+cout<<"Enter the roll and name of the student";
+cin>>st.roll>>st.name;
+file.write((char*)&st,sizeof(struct student));
+file.close();
+}
+int main()
+{
+database obj;
+int choice;
+while(1)
+{
+cout<<"\n1.Insert Record";
+cout<<"\n2.Search Record";
+cout<<"\n3.Update Record";
+cout<<"\n4.Delete Record";
+cout<<"\n5.Sort Records";
+cout<<"\n6.Display Records";
+cout<<"\n7.Quit";
+cout<<"\nEnter your choice ";
+cin>>choice;
+switch(choice)
+{
+case 1:
+obj.insert_data();
+break;
+case 2:
+obj.search_data();
+break;
+case 3:
+obj.update_data();
+break;
+case 4:
+obj.delete_data();
+break;
+case 5:
+obj.sort_data();
+break;
+case 6:
+obj.read_data();
+break;
+case 7:
+return 0;
+};
+}
+}
+
+
